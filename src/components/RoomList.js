@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import MessageList from './MessageList';
 
 class RoomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rooms: [],
+      rooms: []
     };
 
     this.roomsRef = this.props.firebase.database().ref('rooms');
@@ -42,7 +40,7 @@ class RoomList extends Component {
       <div>
       <form onSubmit={ (e) => this.createRoom(e) }>
         <fieldset>
-          <label for="newRoom">Create New Room:</label>
+          <label htmlFor="newRoom">Create New Room:</label>
           <input type="text" id="newRoom" value={this.state.newRoomName} onChange={ (e) => this.handleChange(e) }/>
           <input type="submit" />
         </fieldset>
@@ -50,15 +48,12 @@ class RoomList extends Component {
       <ul>
       {
          this.state.rooms.map( (room, index) =>
-         <div key={room.index} onClick={ (e) => this.selectRoom(room,e) }>
+         <div key={room.key} onClick={ (e) => this.selectRoom(room,e) }>
          {room.name}
          </div>
          )
        }
        </ul>
-       <MessageList
-       firebase={firebase}
-       />
       </div>
     )
   }

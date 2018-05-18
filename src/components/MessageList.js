@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import RoomList from './RoomList';
 
 class MessageList extends Component {
   constructor(props) {
@@ -23,6 +22,7 @@ class MessageList extends Component {
     render() {
       const activeRoomKey = this.props.activeRoomKey;
       return (
+        <div>
         <ul>
         {
          this.state.Messages.map( (message, index) => {
@@ -30,12 +30,13 @@ class MessageList extends Component {
            return null
          } else if (message.roomId === activeRoomKey) {
            return (
-             <li key={message.index}>
-           {message.username}:{message.content}
+             <li key={message.key}>
+           {message.username}: {message.content} - {message.sentAt}
            </li>)}
          })
         }
         </ul>
+        </div>
       )
     }
   }
