@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList'
@@ -42,26 +41,27 @@ setUser(user) {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Bloc Chat</h1>
-          <User
+          <User classname="User"
           firebase={firebase}
           username={this.state.username}
           setUser={this.setUser.bind(this)}
           />
         </header>
-        <div>
-        <h2>{this.state.activeRoom.name}</h2>
-        </div>
-        <main>
-         <RoomList
-         firebase={firebase}
-         activeRoom={this.handleActiveRoom.bind(this)}
-         />
-         <MessageList
-         firebase={firebase}
-         activeRoomKey={this.state.activeRoomKey}
-         />
+        <aside className="Room-list">
+          <RoomList
+          firebase={firebase}
+          activeRoom={this.handleActiveRoom.bind(this)}
+          />
+        </aside>
+        <main className="Message-list">
+          <h2>{this.state.activeRoom.name}</h2>
+          <MessageList
+          firebase={firebase}
+          activeRoomKey={this.state.activeRoomKey}
+          username={this.state.username}
+          setUser={this.setUser.bind(this)}
+          />
         </main>
       </div>
     );
