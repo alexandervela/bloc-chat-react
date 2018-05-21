@@ -3,12 +3,16 @@ import React, { Component } from 'react';
 class MessageList extends Component {
   constructor(props) {
     super(props);
+    this.createMessage = this.createMessage.bind(this);
+    this.convertTimestamp = this.convertTimestamp.bind(this);
     this.state = {
       Messages: [],
       newMessage: ''
+
     };
 
     this.messagesRef = this.props.firebase.database().ref('Messages');
+
   }
 
   componentDidMount() {
@@ -26,36 +30,37 @@ class MessageList extends Component {
       content: this.state.newMessage,
       roomId: this.props.activeRoomKey,
       username: this.props.username,
-      sentAt: this.formatTimeStamp(this.props.firebase.database.ServerValue.TIMESTAMP)
+      sentAt: this.props.firebase.database.ServerValue.TIMESTAMP
     })
     this.setState({ newMessage: '' })
   }
 
-  formatTimeStamp(e) {
-       let hours = Math.floor(e / 60);
-       let minutes = Math.floor(e % 60);
-       let seconds = Math.floor(e % 60);
-       let displayMinutes = ((minutes) < 10) ? ("0" + minutes) : (minutes);
-       let displayHours = ((hours) < 10) ? ("0" + hours) : (hours);
-       let ampm = 'AM'
-
-       if (hours > 12) {
-		   displayHours = hours - 12;
-		   ampm = 'PM';
-     } else if (hours === 12) {
-		   displayHours = 12;
-		   ampm = 'PM';
-     } else if (hours == 0) {
-		   displayHours = 12;
-	     }
-
-	     let time = displayHours + ':' + displayMinutes + ' ' + ampm;
-       return time;
-       }
-
   handleMessageChange(e) {
     this.setState({ newMessage: e.target.value })
   }
+
+  convertTimestamp(timestamp) {
+  var d = new Date(timestamp),
+		hh = d.getHours(),
+		hour = hh,
+		minutes = ('0' + d.getMinutes()).slice(-2),
+		ampm = 'AM',
+		time;
+
+	if (hh > 12) {
+		hour = hh - 12;
+		ampm = 'PM';
+	} else if (hh === 12) {
+		hour = 12;
+		ampm = 'PM';
+	} else if (hh == 0) {
+		hour = 12;
+	}
+
+	time = hour + ':' + minutes + ' ' + ampm;
+
+	return time;
+}
 
     render() {
       const activeRoomKey = this.props.activeRoomKey;
@@ -69,7 +74,7 @@ class MessageList extends Component {
            } else if (message.roomId === activeRoomKey) {
            return (
             <li key={message.key}>
-            {message.username}: {message.content} - {message.sentAt}
+            {message.username}: {message.content} - {this.convertTimestamp(message.sentAt)}
             </li>)} else { return null }
          })
         }
