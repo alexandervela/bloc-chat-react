@@ -25,11 +25,33 @@ class MessageList extends Component {
     this.messagesRef.push({
       content: this.state.newMessage,
       roomId: this.props.activeRoomKey,
-      sentAt: this.props.firebase.database.ServerValue.TIMESTAMP,
-      username: this.props.username
-    });
+      username: this.props.username,
+      sentAt: this.formatTimeStamp(this.props.firebase.database.ServerValue.TIMESTAMP)
+    })
     this.setState({ newMessage: '' })
   }
+
+  formatTimeStamp(e) {
+       let hours = Math.floor(e / 60);
+       let minutes = Math.floor(e % 60);
+       let seconds = Math.floor(e % 60);
+       let displayMinutes = ((minutes) < 10) ? ("0" + minutes) : (minutes);
+       let displayHours = ((hours) < 10) ? ("0" + hours) : (hours);
+       let ampm = 'AM'
+
+       if (hours > 12) {
+		   displayHours = hours - 12;
+		   ampm = 'PM';
+     } else if (hours === 12) {
+		   displayHours = 12;
+		   ampm = 'PM';
+     } else if (hours == 0) {
+		   displayHours = 12;
+	     }
+
+	     let time = displayHours + ':' + displayMinutes + ' ' + ampm;
+       return time;
+       }
 
   handleMessageChange(e) {
     this.setState({ newMessage: e.target.value })
